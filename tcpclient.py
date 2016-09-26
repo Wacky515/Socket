@@ -14,6 +14,7 @@
 # モジュールインポート
 # from __future__ import print_function
 import os
+import sys
 import time
 import socket
 from contextlib import closing
@@ -22,11 +23,14 @@ from contextlib import closing
 class TcpCliCom:
     """ TCP/IP通信 """
     def __init__(self):
-        self.client_name = socket.gethostname()
+        if os.name == "nt":
+            self.client_name = socket.gethostname()
+            self.client_addr = (socket.gethostbyname(self.client_name),
+                            self.client_port)
+        elif sys.platform == "linux2":
+            self.client_name = os.uname()[1]
         self.client_port = 9000
         self.server_port = 60001
-        self.client_addr = (socket.gethostbyname(self.client_name),
-                            self.client_port)
 
         if socket.gethostname() == "cad0021":
             self.server_host = "172.21.38.192"
@@ -114,12 +118,13 @@ class TcpCliCom:
 
 def main():
     tcc = TcpCliCom()
+    print(tcc.client_name)
     # sended = tcc.send_client(host="192.168.1.5", port=60001, send_data="OK")
     # print("Send from python: " + str(sended))
 
-    readed = tcc.read_client(host="192.168.1.5", port=60001,
-                             onetime=True, prefix="OK", reply="OK")
-    print("Read from python: " + str(readed))
+    # readed = tcc.read_client(host="192.168.1.5", port=60001,
+    #                          onetime=True, prefix="OK", reply="OK")
+    # print("Read from python: " + str(readed))
 
 if __name__ == "__main__":
     main()
