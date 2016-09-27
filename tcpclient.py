@@ -37,18 +37,18 @@ class TcpCliCom:
 
         elif sys.platform == "linux2":
             self.client_name = os.uname()[1]
-            elif self.client_name == "ProSalad13.local":
+            if self.client_name == "ProSalad13.local":
                 self.server_host = "10.0.1.5"
                 print("Selected MacBook Pro")
             else:
-                self.server_host = client_addr
+                # self.server_host = client_addr
                 print("Selected unknouwn PC")
 
         self.client_port = 9000
         self.server_port = 60001
 
         print("Host name: " + self.client_name)
-        print("Local addr: " + str(self.client_addr))
+        # print("Local addr: " + str(self.client_addr))
         print("")
 
     def read_client(self, host=None, port=None, bufsize=4096,
@@ -120,6 +120,7 @@ def main():
     tcc = TcpCliCom()
     print(tcc.client_name)
     print(os.uname())
+    print(socket.gethostname())
     # sended = tcc.send_client(host="192.168.1.5", port=60001, send_data="OK")
     # print("Send from python: " + str(sended))
 
