@@ -123,7 +123,10 @@ class TcpCliCom:
 
 
 def main():
-    tcc = TcpCliCom()
+    client_name = socket.gethostname()
+    print(client_name)
+    print(socket.gethostbyname(client_name))
+    # tcc = TcpCliCom()
     # sended = tcc.send_client(host="192.168.1.5", port=60001, send_data="OK")
     # print("Send from python: " + str(sended))
 
