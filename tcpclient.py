@@ -44,9 +44,8 @@ class TcpCliCom:
                 print("In PXI")
 
         elif os.name == "posix":
-            # self.client_name = os.uname()[1]
             if self.client_name == "xacti":
-                self.server_host == "192.168.1.5"
+                self.server_host = "172.21.38.31"
                 print("Selected Debian8 in cad0021 Virtual Box")
             elif self.client_name == "ProSalad13.local":
                 self.server_host = "10.0.1.5"
