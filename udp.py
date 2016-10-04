@@ -1,7 +1,7 @@
 # !/usr/bin/python
 # -*- coding: utf-8 -*-
 # -------------------------------------------------------------------------------
-# Name:        UDP/IP
+# Name:        UDP/IP communication
 # Purpose:
 #
 # Author:      Kilo11
@@ -13,6 +13,7 @@
 
 # モジュールインポート
 # from __future__ import print_function
+import os
 import time
 import socket
 from contextlib import closing
@@ -20,98 +21,130 @@ from contextlib import closing
 
 class UdpCommun:
     """ UDP/IP通信 """
-    # def __init__(self):
-    #     self.host = socket.gethostname()
-    #     self.port = 4000
-    #     self.addr = (socket.gethostbyname(self.host), self.port)
+    def __init__(self):
+        self.host_name = socket.gethostname()
+        self.local_port = 9000
+        self.remote_port = 60001
+        self.local_addr = (socket.gethostbyname(self.host_name),
+                           self.local_port)
 
-    def read_udp(self, host="0.0.0.0", port=4000, bufsize=4096, onetime=False):
+        if socket.gethostname() == "cad0021":
+            self.local_host = "172.21.38.192"
+            print("Selected Creo PC")
+        elif socket.gethostname() == "PC-SA4110204580":
+            self.local_host = "192.168.1.11"
+            print("Selected Creo PC")
+
+        elif os.uname()[1] == "ProSalad13.local":
+            self.local_host = "10.0.1.31"
+            print("Selected MacBook Pro")
+        else:
+            self.local_host = "192.168.1.5"
+            print("Selected unknouwn PC")
+
+        print("Host name: " + self.host_name)
+        print("Local addr: " + str(self.local_addr))
+        print("")
+
+    def read_udp(self, host=None, port=None, bufsize=4096,
+                 onetime=False):  # {{{
         """ 受信 """
-        read_data = ""
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        with closing(sock):
-            sock.bind((host, port))
-            sock.connect(("172.21.38.192", 60001))
-            while True:
-                read_data = sock.recv(bufsize).strip()
-                print("Get data from UDP/IP: " + str(read_data))
-                if onetime is True and read_data != "":
-                    break
-        return read_data
+        if host is None:
+            host = "0.0.0.0"
+        if port is None:
+            port = self.local_port
+        read_data = None
 
-    def send_udp(self, host="127.0.0.1", port=4001,
-                 onetime=False, send_data="From Python"):
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            with closing(sock):
+                sock.bind((host, port))
+
+                while True:
+                    read_data = sock.recv(bufsize).strip()
+                    print("Get data from UDP/IP: " + str(read_data))
+                    print("")
+
+                    if onetime is True and read_data is not None:
+                        break
+                return read_data
+
+        except socket.timeout:
+            print("Time out")
+            print("")
+# }}}
+
+    def send_udp(self, host=None, port=None,
+                 onetime=True, send_data="From Python"):  # {{{
         """ 送信 """
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        # sock.sendto(send_data, (host, port))  with closing(sock):
-        with closing(sock):
-            sock.connect(("172.21.38.192", 60001))
-            while True:
-                sock.sendto(send_data, (host, port))
-                print("Send data from UDP/IP: " + str(send_data))
-                if onetime is True:
-                    break
-                time.sleep(1.0)
-        return
+        if host is None:
+            host = self.local_host
+        if port is None:
+            port = self.remote_port
 
-    def multi_cast_send_udp(self,
-                            host="127.0.0.1",
-                            multicast_group="172.21.38.192",
-                            port=4001,
-                            onetime=False, send_data="From Python"):
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            with closing(sock):
+                while True:
+                    sock.sendto(send_data, (host, port))
+                    print("Send data from UDP/IP: " + str(send_data))
+                    print("")
+
+                    if onetime is True:
+                        break
+                    time.sleep(1.0)
+            return send_data
+
+        except socket.timeout:
+            print("Time out")
+            print("")
+# }}}
+
+    def multicast_send_udp(self,
+                            host="", multicast_group=None,
+                            port=None,
+                            onetime=False,
+                            send_data="From Python multicasting"):  # {{{
         """ マルチキャスト 送信 """
-        with closing(socket.socket(socket.AF_INET, socket.SOCK_DGRAM)) as sock:
-            sock.setsockopt(socket.IPPROTO_IP,
-                            socket.IP_MULTICAST_IF,
-                            socket.inet_aton(host))
-            while True:
-                sock.sendto(send_data, (multicast_group, port))
-                print("Send data from UDP/IP: " + str(send_data))
-                if onetime is True:
-                    break
-                time.sleep(1.0)
-        return
+        if host is None:
+            host = self.local_host
+        if port is None:
+            port = self.remote_port
+
+        if multicast_group is None:
+            multicast_group = self.local_host
+
+        try:
+            with closing(socket.socket(socket.AF_INET,
+                                       socket.SOCK_DGRAM)) as sock:
+                sock.setsockopt(socket.IPPROTO_IP,
+                                socket.IP_MULTICAST_IF,
+                                socket.inet_aton(host))
+                while True:
+                    sock.sendto(send_data, (multicast_group, port))
+                    print("Send data from UDP/IP: " + str(send_data))
+                    print("")
+
+                    if onetime is True:
+                        break
+                    time.sleep(1.0)
+            return send_data
+
+        except socket.timeout:
+            print("Time out")
+            print("")
+# }}}
 
 
 def main():
-    host = socket.gethostname()
-    print("Host name: " + str(host))
-    print("Host addr: " + str(socket.gethostbyname(host)))
-    print("")
+    udc = UdpCommun()
+    sended = udc.send_udp(host="", port=9000, send_data="OK")
+    # !!!: 試す
+    # sended = udc.send_udp(host="192.168.1.5:9000")
+    print("Send from python: " + sended)
 
-    # udc = UdpCommun()
-    # udc.read_udp(port=9000, onetime=True)
-    # udc.read_udp(port=9000, onetime=False)
-    # udc.read_udp(port=9000, onetime=False)
-    # udc.read_udp(host="192.168.1.5", port=9000, onetime=True)
-
-    # udc.send_udp(host="192.168.1.5", port=60001, onetime=True, send_data="OK")
-    # udc.send_udp(host="172.21.38.192",
-    # udc.send_udp(host="192.168.1.5",
-    #              port=60001, onetime=True, send_data="Send OK")
-    # udc.multi_cast_send_udp(host="172.21.38.192",
-    # udc.multi_cast_send_udp(host="192.168.1.11",
-    #                         port=60001, onetime=False,
-    #                         send_data="Multicasting OK")
-
-    # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    # sock.sendto("OKb", ("127.0.0.1", 60001))
-
-    # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # DESTINATION_ADDR = "172.21.38.192"
-    # SOURCE_PORT, DESTINATION_PORT = 31415, 80
-    # sock.bind(("172.21.38.192", SOURCE_PORT))
-    # sock.connect((DESTINATION_ADDR, DESTINATION_PORT))
-
-    UDP_IP = "172.21.38.192"
-    # UDP_IP = "192.168.1.5"
-    UDP_PORT = 60001
-    MESSAGE = "OK test"
-
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-    sock.connect(("192.168.1.11", 9000))
-    sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
+    readed = udc.read_udp(onetime=True)
+    print("Read from python: " + readed)
 
 if __name__ == "__main__":
     main()
