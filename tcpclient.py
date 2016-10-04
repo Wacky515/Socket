@@ -24,11 +24,11 @@ class TcpCliCom:
     def __init__(self):
         self.client_port = 9000
         self.server_port = 60001
+        self.client_name = socket.gethostname()
+        self.client_addr = (socket.gethostbyname(self.client_name),
+                            self.client_port)
 
         if os.name == "nt":
-            self.client_name = socket.gethostname()
-            self.client_addr = (socket.gethostbyname(self.client_name),
-                                self.client_port)
             if self.client_name == "cad0021":
                 self.server_host = "172.21.38.192"
                 # self.server_host = "172.21.38.31"
@@ -44,13 +44,14 @@ class TcpCliCom:
                 print("In PXI")
 
         elif os.name == "posix":
-            self.client_name = os.uname()[1]
-            if self.client_name == "ProSalad13.local":
+            # self.client_name = os.uname()[1]
+            if self.client_name == "xacti":
+                self.server_host == "192.168.1.5"
+                print("Selected Debian8 in cad0021 Virtual Box")
+            elif self.client_name == "ProSalad13.local":
                 self.server_host = "10.0.1.5"
                 print("Selected MacBook Pro")
             else:
-                # TODO: "client_addr" を設定する
-                # self.server_host = client_addr
                 print("Selected unknouwn PC")
 
         print("Host name: " + self.client_name)
@@ -123,10 +124,7 @@ class TcpCliCom:
 
 
 def main():
-    client_name = socket.gethostname()
-    print(client_name)
-    print(socket.gethostbyname(client_name))
-    # tcc = TcpCliCom()
+    tcc = TcpCliCom()
     # sended = tcc.send_client(host="192.168.1.5", port=60001, send_data="OK")
     # print("Send from python: " + str(sended))
 
