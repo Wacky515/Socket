@@ -13,38 +13,19 @@
 
 # モジュールインポート
 # from __future__ import print_function
-import os
 import time
 import socket
+import tcpclient as tcp
 from contextlib import closing
 
 
-class UdpCommun:
+class UdpCommun(tcp.TcpCliCom):
     """ UDP/IP通信 """
     def __init__(self):
-        self.host_name = socket.gethostname()
-        self.local_port = 9000
-        self.remote_port = 60001
-        self.local_addr = (socket.gethostbyname(self.host_name),
-                           self.local_port)
+        tcp.TcpCliCom.__init__(self)
 
-        if socket.gethostname() == "cad0021":
-            self.local_host = "172.21.38.192"
-            print("Selected Creo PC")
-        elif socket.gethostname() == "PC-SA4110204580":
-            self.local_host = "192.168.1.11"
-            print("Selected Creo PC")
-
-        elif os.uname()[1] == "ProSalad13.local":
-            self.local_host = "10.0.1.31"
-            print("Selected MacBook Pro")
-        else:
-            self.local_host = "192.168.1.5"
-            print("Selected unknouwn PC")
-
-        print("Host name: " + self.host_name)
-        print("Local addr: " + str(self.local_addr))
-        print("")
+        self.local_port = self.client_port
+        self.remote_port = self.server_port
 
     def read_udp(self, host=None, port=None, bufsize=4096,
                  onetime=False):  # {{{
@@ -101,9 +82,9 @@ class UdpCommun:
 # }}}
 
     def multicast_send_udp(self,
-                            host="", multicast_group=None,
-                            port=None,
-                            onetime=False,
+                           host="", multicast_group=None,
+                           port=None,
+                           onetime=False,
                             send_data="From Python multicasting"):  # {{{
         """ マルチキャスト 送信 """
         if host is None:

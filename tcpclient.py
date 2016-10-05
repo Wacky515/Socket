@@ -20,7 +20,7 @@ from contextlib import closing
 
 
 class TcpCliCom:
-    """ TCP/IP通信 """
+    """ TCP/IP通信 クライアント """
     def __init__(self):
         self.client_port = 9000
         self.server_port = 60001
@@ -34,9 +34,10 @@ class TcpCliCom:
                 # self.server_host = "172.21.38.31"
                 print("Selected Creo PC")
             elif self.client_name == "PC-SA4110204580":
+                # self.server_host = "172.21.115.144"
                 self.server_host = "192.168.1.5"
                 print("Selected Old Let's note")
-            elif self.client_name == "":
+            elif self.client_name == "NOT0053":
                 self.server_host = "192.168.1.5"
                 print("Selected New Let's note")
             else:

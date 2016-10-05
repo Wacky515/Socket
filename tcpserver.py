@@ -13,37 +13,15 @@
 
 # モジュールインポート
 # from __future__ import print_function
-import os
 import socket
+import tcpclient as tcp
 from contextlib import closing
 
 
-class TcpSrvCom:
-    """ TCP/IP通信 """
+class TcpSrvCom(tcp.TcpCliCom):
+    """ TCP/IP通信 サーバー """
     def __init__(self):
-        self.server_name = socket.gethostname()
-        self.client_port = 9000
-        self.server_port = 60001
-        self.server_addr = (socket.gethostbyname(self.server_name),
-                            self.server_port)
-
-        if socket.gethostname() == "cad0021":
-            self.server_host = "172.21.38.192"
-            print("Selected Creo PC")
-        elif socket.gethostname() == "PC-SA4110204580":
-            self.server_host = "172.21.115.144"
-            print("Selected Old Let's note")
-
-        elif os.uname()[1] == "ProSalad13.local":
-            self.server_host = "192.168.1.5"
-            print("Selected MacBook Pro")
-        else:
-            self.server_host = "192.168.1.5"
-            print("Selected unknouwn PC")
-
-        print("Server name: " + self.server_name)
-        print("Server addr: " + str(self.server_addr))
-        print("")
+        tcp.TcpCliCom.__init__(self)
 
     def read_server(self, host=None, port=None, bufsize=4096,
                     onetime=False, reply=None):
