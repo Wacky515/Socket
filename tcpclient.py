@@ -51,6 +51,9 @@ class TcpCliCom:
             elif self.client_name == "ProSalad13.local":
                 self.server_host = "10.0.1.5"
                 print("Selected MacBook Pro")
+            elif self.client_name == "saladserver.com":
+                self.server_host = "10.0.1.1"
+                print("Selected Mac mini")
             else:
                 print("Selected unknouwn PC")
 
@@ -124,7 +127,8 @@ class TcpCliCom:
 
 
 def main():
-    tcc = TcpCliCom()
+    print(socket.gethostname())
+    # tcc = TcpCliCom()
     # sended = tcc.send_client(host="192.168.1.5", port=60001, send_data="OK")
     # print("Send from python: " + str(sended))
 
