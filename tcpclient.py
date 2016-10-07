@@ -51,7 +51,11 @@ class TcpCliCom:
             elif self.client_name == "ProSalad13.local":
                 self.server_host = "10.0.1.5"
                 print("Selected MacBook Pro")
+            elif self.client_name == "saladserver.com":
+                self.server_host = "10.0.1.1"
+                print("Selected Mac mini")
             else:
+                self.server_host = "10.0.1.5"
                 print("Selected unknouwn PC")
 
         print("Host name: " + self.client_name)

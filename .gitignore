@@ -1,0 +1,17 @@
+.DS_Store
+*.un~
+*.*~
+*.swp
+*.pyc
+*.swo
+*.sw*
+*.ppt
+
+./
+old/
+TcpIpTool/
+UdpIpTool/
+!*.py
+!*.md
+!*.txt
+tags
