@@ -55,6 +55,7 @@ class TcpCliCom:
                 self.server_host = "10.0.1.1"
                 print("Selected Mac mini")
             else:
+                self.server_host = "10.0.1.5"
                 print("Selected unknouwn PC")
 
         print("Host name: " + self.client_name)
@@ -127,8 +128,7 @@ class TcpCliCom:
 
 
 def main():
-    print(socket.gethostname())
-    # tcc = TcpCliCom()
+    tcc = TcpCliCom()
     # sended = tcc.send_client(host="192.168.1.5", port=60001, send_data="OK")
     # print("Send from python: " + str(sended))
 
