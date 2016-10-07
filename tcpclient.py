@@ -33,6 +33,10 @@ class TcpCliCom:
                 self.server_host = "172.21.38.192"
                 # self.server_host = "172.21.38.31"
                 print("Selected Creo PC")
+            elif self.client_name == "mcad1037":
+                # self.server_host = "172.21.38.31"
+                self.server_host = "172.21.38.192"
+                print("Selected DR PC")
             elif self.client_name == "PC-SA4110204580":
                 # self.server_host = "172.21.115.144"
                 self.server_host = "192.168.1.5"
