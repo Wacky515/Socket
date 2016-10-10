@@ -120,8 +120,6 @@ class UdpCommun(tcp.TcpCliCom):
 def main():
     udc = UdpCommun()
     sended = udc.send_udp(host="", port=9000, send_data="OK")
-    # !!!: 試す
-    # sended = udc.send_udp(host="192.168.1.5:9000")
     print("Send from python: " + sended)
 
     readed = udc.read_udp(onetime=True)
