@@ -1,15 +1,15 @@
 # !/usr/bin/python
 # -*- coding: utf-8 -*-
-# -------------------------------------------------------------------------------
-# Name:        UDP/IP communication
-# Purpose:
+# -----------------------------------------------------------------------------
+# Name:        udp.py
+# Purpose:     In README.md
 #
 # Author:      Kilo11
 #
 # Created:     13/09/2016
 # Copyright:   (c) SkyDog 2016
-# Licence:     SDS10012
-# -------------------------------------------------------------------------------
+# Licence:     SDS10011
+# -----------------------------------------------------------------------------
 
 # モジュールインポート
 # from __future__ import print_function
@@ -85,7 +85,7 @@ class UdpCommun(tcp.TcpCliCom):
                            host="", multicast_group=None,
                            port=None,
                            onetime=False,
-                            send_data="From Python multicasting"):  # {{{
+                           send_data="From Python multicasting"):  # {{{
         """ マルチキャスト 送信 """
         if host is None:
             host = self.local_host
