@@ -61,6 +61,7 @@ class TcpCliCom:
             else:
                 self.server_host = "10.0.1.5"
                 print("Selected unknouwn PC")
+        print("")
 
         print("Host name: " + self.client_name)
         print("Local addr: " + str(self.client_addr))
@@ -133,8 +134,8 @@ class TcpCliCom:
 
 def main():
     tcc = TcpCliCom()
-    # sended = tcc.send_client(host="192.168.1.5", port=60001, send_data="OK")
-    # print("Send from python: " + str(sended))
+    sended = tcc.send_client(host="192.168.1.5", port=60001, send_data="OK")
+    print("Send from python: " + str(sended))
 
     # readed = tcc.read_client(host="192.168.1.5", port=60001,
     #                          onetime=True, prefix="OK", reply="OK")
