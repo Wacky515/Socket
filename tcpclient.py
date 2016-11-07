@@ -25,8 +25,8 @@ class TcpCliCom:
         self.client_port = 9000
         self.server_port = 60001
         self.client_name = socket.gethostname()
-        self.client_addr = (socket.gethostbyname(self.client_name),
-                            self.client_port)
+        sgb = socket.gethostbyname
+        self.client_addr = (sgb(self.client_name), self.client_port)
 
         if os.name == "nt":
             if self.client_name == "cad0021":
@@ -63,8 +63,8 @@ class TcpCliCom:
                 print("Selected unknouwn PC")
         print("")
 
-        print("Host name: " + self.client_name)
-        print("Local addr: " + str(self.client_addr))
+        print("Host(this PC) name: " + self.client_name)
+        print("Local(this PC) addr: " + str(self.client_addr))
         print("")
 
     def read_client(self, host=None, port=None, bufsize=4096,
@@ -134,12 +134,12 @@ class TcpCliCom:
 
 def main():
     tcc = TcpCliCom()
-    sended = tcc.send_client(host="192.168.1.5", port=60001, send_data="OK")
-    print("Send from python: " + str(sended))
+    # sended = tcc.send_client(host="192.168.1.5", port=60001, send_data="OK")
+    # print("Send from python: " + str(sended))
 
-    # readed = tcc.read_client(host="192.168.1.5", port=60001,
-    #                          onetime=True, prefix="OK", reply="OK")
-    # print("Read from python: " + str(readed))
+    readed = tcc.read_client(host="192.168.1.5", port=60001,
+                             onetime=True, prefix="OK", reply="OK")
+    print("Read from python: " + str(readed))
 
 if __name__ == "__main__":
     main()
