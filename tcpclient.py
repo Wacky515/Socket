@@ -28,38 +28,48 @@ class TcpCliCom:
         sgb = socket.gethostbyname
         self.client_addr = (sgb(self.client_name), self.client_port)
 
+        self.dic_host_addr = {"cad0021": "172.21.38.192",
+                              "mcad1037": "172.21.38.31",
+                              "ProSalad13.local": "10.0.1.33",
+                              "saladserver.com": "10.0.1.31",
+                              "IAI_Robo": "192.168.1.5"
+                              }
+        scn = self.client_name
+        d_ha = self.dic_host_addr
+
         if os.name == "nt":
-            if self.client_name == "cad0021":
-                self.server_host = "172.21.38.192"
-                # self.server_host = "172.21.38.31"
+            if scn == "cad0021":
+                self.server_host = d_ha["cad0021"]
+                # self.server_host = d_ha["mcad1037"]
+                # self.server_host = d_ha["IAI_Robo"]
                 print("Selected Creo PC")
-            elif self.client_name == "mcad1037":
-                # self.server_host = "172.21.38.31"
-                self.server_host = "172.21.38.192"
+            elif scn == "mcad1037":
+                # self.server_host = d_ha["mcad1037"]
+                # self.server_host = d_ha["cad0021"]
+                self.server_host = d_ha["IAI_Robo"]
                 print("Selected DR PC")
-            elif self.client_name == "PC-SA4110204580":
-                # self.server_host = "172.21.115.144"
-                self.server_host = "192.168.1.5"
+            elif scn == "PC-SA4110204580":
+                self.server_host = d_ha["IAI_Robo"]
                 print("Selected Old Let's note")
-            elif self.client_name == "NOT0053":
-                self.server_host = "192.168.1.5"
+            elif scn == "NOT0053":
+                self.server_host = d_ha["IAI_Robo"]
                 print("Selected New Let's note")
             else:
-                self.server_host = "192.168.1.5"
+                self.server_host = d_ha["IAI_Robo"]
                 print("In PXI")
 
         elif os.name == "posix":
-            if self.client_name == "xacti":
-                self.server_host = "172.21.38.31"
+            if scn == "xacti":
+                self.server_host = d_ha["IAI_Robo"]
                 print("Selected Debian8 in cad0021 Virtual Box")
-            elif self.client_name == "ProSalad13.local":
-                self.server_host = "10.0.1.5"
+            elif scn == "ProSalad13.local":
+                self.server_host = d_ha["saladserver.com"]
                 print("Selected MacBook Pro")
-            elif self.client_name == "saladserver.com":
-                self.server_host = "10.0.1.1"
+            elif scn == "saladserver.com":
+                self.server_host = d_ha["ProSalad13.local"]
                 print("Selected Mac mini")
             else:
-                self.server_host = "10.0.1.5"
+                self.server_host = d_ha["IAI_Robo"]
                 print("Selected unknouwn PC")
         print("")
 
@@ -75,6 +85,10 @@ class TcpCliCom:
         if port is None:
             port = self.server_port
         read_data = None
+
+        print("Connect to(addr): " + host)
+        print("Connect to(port): " + str(port))
+        print("")
 
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -100,6 +114,7 @@ class TcpCliCom:
 
                     if onetime is True and read_data is not None:
                         break
+
                     if read_data == "q":
                         break
 
@@ -134,10 +149,14 @@ class TcpCliCom:
 
 def main():
     tcc = TcpCliCom()
+    # host = tcc.dic_host_addr["IAI_ROBO"]
+    server_addr = tcc.dic_host_addr["cad0021"]
+    # host = tcc.dic_host_addr["mcad1037"]
+
     # sended = tcc.send_client(host="192.168.1.5", port=60001, send_data="OK")
     # print("Send from python: " + str(sended))
 
-    readed = tcc.read_client(host="192.168.1.5", port=60001,
+    readed = tcc.read_client(host=server_addr,
                              onetime=True, prefix="OK", reply="OK")
     print("Read from python: " + str(readed))
 
