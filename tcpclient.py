@@ -30,7 +30,7 @@ class TcpCliCom:
 
         self.dic_host_addr = {"cad0021": "172.21.38.192",
                               "mcad1037": "172.21.38.31",
-                              "ProSalad13.local": "10.0.1.33",
+                              "ProSalad13.local": str(self.client_addr),
                               "saladserver.com": "10.0.1.31",
                               "IAI_Robo": "192.168.1.5"
                               }
